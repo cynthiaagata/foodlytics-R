@@ -17,7 +17,7 @@ This dashboard visualizes restaurant quality and type across Canada’s main cit
    
 4. **Install the required R packages (in RStudio console):**
    ```r
-   install.packages(c("shiny", "bslib", "dplyr", "plotly", "ggridges", "ggplot2", "tidyverse"))
+   install.packages(c("shiny", "bslib", "dplyr", "plotly", "ggridges", "ggplot2", "tidyverse", "rlang"))
    ```
 
 5. **Start the dashboard (in RStudio console):**
