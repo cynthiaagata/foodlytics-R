@@ -10,12 +10,17 @@ This dashboard visualizes restaurant quality and type across Canada’s main cit
    cd foodlytics-R
    ```
 
-2. **Install the required R packages (in RStudio console):**
+2. **Open App.R file in RStudio:**
+   ```bash
+   open -a RStudio app.R
+   ```
+   
+4. **Install the required R packages (in RStudio console):**
    ```r
    install.packages(c("shiny", "bslib", "dplyr", "plotly", "ggridges", "ggplot2", "tidyverse"))
    ```
 
-3. **Start the dashboard (in RStudio console):**
+5. **Start the dashboard (in RStudio console):**
    ```r
    shiny::runApp("app.R")
    ```
