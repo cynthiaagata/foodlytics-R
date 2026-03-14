@@ -1,6 +1,6 @@
 # Foodlytics - R
 
-This dashboard visualizes restaurant quality and type across Canada’s main cities, including cuisine/type categories and price ranges. It is aimed at businesses and entrepreneurs planning to open a new restaurant. The app helps users understand the local restaurant landscape so they can make better decisions about where to open and what type of restaurant to offer.
+This dashboard visualizes restaurant quality and type across Canada’s main cities, including cuisine/type categories and price ranges. It is aimed at businesses and entrepreneurs planning to open a new restaurant. The app helps users understand the local restaurant landscape so they can make better decisions about where to open and what type of restaurant to offer. Note: This app is a smaller version of [Foodlytics with Python](https://github.com/UBC-MDS/DSCI-532_2026_23_foodlytics.git), some features like map is not available.
 
 ## Run the dashboard locally
 
