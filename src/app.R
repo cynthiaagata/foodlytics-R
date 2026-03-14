@@ -33,39 +33,6 @@ cuisines <- filter_choices(category_1)
 types <- filter_choices(category_2)
 price_range <- filter_choices(price_range)
 
-# Baseline for "total restaurants" comparison: average per city
-overall_n <- nrow(data)
-overall_avg <- mean(data$star, na.rm = TRUE)
-avg_res_per_city <- if (length(cities) > 0) overall_n / length(cities) else 0
-
-# for kpi_boxes reactivity 
-compare <- function(current, baseline, higher_is_better = TRUE, vs_label = "overall avg") {
-  if (baseline == 0 || is.na(current)) {
-    return(list(icon = "circle-minus", theme = "secondary", badge = "no data", label = "no data"))
-  }
-  
-  pct <- (current - baseline) / abs(baseline) * 100
-  is_good <- if (higher_is_better) pct > 0 else pct < 0
-  abs_pct <- abs(pct)
-  sign <- if (pct >= 0) "+" else ""
-  badge <- sprintf("%s%.1f (%s%.1f%%) vs %s", sign, current - baseline, sign, pct, vs_label)
-  
-  if (abs_pct < 1) {
-    return(list(icon = "arrow-right", theme = "secondary", badge = paste("≈ stable vs", vs_label), label = "stable"))
-  }
-  
-  icon <- if (pct > 0) "arrow-trend-up" else "arrow-trend-down"
-  theme <- if (is_good && abs_pct >= 5) "success" else if (is_good) "teal" else if (abs_pct >= 5) "danger" else "warning"
-  quantifier <- if (abs_pct >= 5) "significantly" else "slightly"
-  label <- paste(quantifier, if (pct > 0) "above avg" else "below avg")
-  
-  list(icon = icon, theme = theme, badge = badge, label = label)
-}
-
-kpi_showcase <- function(cmp){
-  return 
-}
-
 # UI
 
 ui <- page_fillable(
@@ -76,7 +43,7 @@ ui <- page_fillable(
       div(
         style = "height: 200px; overflow-y: auto;",
         checkboxGroupInput(
-          inputId = "restaurant_type",
+          inputId = "checkbox_group",
           label = "",
           choices = cuisines,
           selected = cuisines
@@ -102,12 +69,7 @@ ui <- page_fillable(
         dataTableOutput("tips_data"),
         full_screen = TRUE
       ),
-      card(
-        card_header("Total bill vs tip"),
-        plotlyOutput("scatterplot"),
-        full_screen = TRUE
-      ),
-      col_widths = c(6, 6)
+      fill = FALSE
     ),
     layout_columns(
       card(
@@ -130,8 +92,8 @@ server <- function(input, output, session) {
   })
   
   output$total_res <- renderText({
-    perc <- filtered_data()$tip / filtered_data()$total_bill
-    paste0(sprintf("%.1f", mean(perc) * 100), "%")
+    total <- nrow(filtered_data())
+    total
   })
   
   output$avg_ratings <- renderText({
