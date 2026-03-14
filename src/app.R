@@ -77,3 +77,65 @@ ui <- page_fillable(
     )
   )
 )
+
+
+# Server
+server <- function(input, output, session) {
+  filtered_data <- reactive({
+    tips %>%
+      filter(
+        total_bill >= input$slider[1],
+        total_bill <= input$slider[2],
+        time %in% input$checkbox_group
+      )
+  })
+  
+  output$total_tippers <- renderText({
+    as.character(nrow(filtered_data()))
+  })
+  
+  output$average_tip <- renderText({
+    perc <- filtered_data()$tip / filtered_data()$total_bill
+    paste0(sprintf("%.1f", mean(perc) * 100), "%")
+  })
+  
+  output$average_bill <- renderText({
+    bill <- mean(filtered_data()$total_bill)
+    paste0("$", sprintf("%.2f", bill))
+  })
+  
+  output$tips_data <- renderDataTable({
+    filtered_data()
+  })
+  
+  output$scatterplot <- renderPlotly({
+    plot_ly(
+      data = filtered_data(),
+      x = ~total_bill,
+      y = ~tip,
+      type = "scatter",
+      mode = "markers"
+    ) %>%
+      add_lines(
+        y = ~ fitted(loess(tip ~ total_bill, data = filtered_data())),
+        line = list(color = "red"),
+        name = "LOWESS"
+      )
+  })
+  
+  output$ridge <- renderPlotly({
+    df <- filtered_data() %>%
+      mutate(percent = tip / total_bill)
+    
+    p <- ggplot(df, aes(x = percent, y = day, fill = day)) +
+      geom_density_ridges(bandwidth = 0.01) +
+      scale_fill_viridis_d() +
+      theme_minimal() +
+      theme(legend.position = "top")
+    
+    ggplotly(p)
+  })
+}
+
+# Create app
+shinyApp(ui = ui, server = server)
