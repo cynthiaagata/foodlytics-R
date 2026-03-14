@@ -8,7 +8,7 @@ library(tidyverse)
 
 # Load Data
 get_data <- function() {
-  df <- read_csv("../data/raw/cleaned_full_data.csv")
+  df <- read_csv("data/raw/cleaned_full_data.csv")
   df$city <- gsub("Branpton", "Brampton", df$city)
   return(df)
 }
