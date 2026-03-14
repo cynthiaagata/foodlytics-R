@@ -65,19 +65,12 @@ ui <- page_fillable(
     ),
     layout_columns(
       card(
-        card_header("Tips data"),
-        dataTableOutput("tips_data"),
+        card_header("Restaurants"),
+        dataTableOutput("data"),
         full_screen = TRUE
       ),
       fill = FALSE
     ),
-    layout_columns(
-      card(
-        card_header("Tip percentages"),
-        plotlyOutput("ridge"),
-        full_screen = TRUE
-      )
-    )
   )
 )
 
@@ -97,12 +90,14 @@ server <- function(input, output, session) {
   })
   
   output$avg_ratings <- renderText({
-    bill <- mean(filtered_data()$total_bill)
-    paste0("$", sprintf("%.2f", bill))
+    df <- filtered_data()
+    avg <- if (nrow(df) == 0) 0.0 else mean(df$star, na.rm = TRUE)
+    sprintf("%.2f", avg)
   })
   
-  output$tips_data <- renderDataTable({
-    filtered_data()
+  output$data <- renderDataTable({
+    filtered_data() |> 
+      select(-url, -distance, -...1)
   })
   
   output$scatterplot <- renderPlotly({
