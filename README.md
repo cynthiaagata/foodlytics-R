@@ -43,7 +43,7 @@ You can access the deployed dashboard here:
 https://cynthiaagata-foodlytics-r.share.connect.posit.cloud 
 
 ## Contributor
-* **Cynthia Limantono** ([@cynthiaagata](https://github.com/cynthiaagata))
+**Cynthia Limantono** ([@cynthiaagata](https://github.com/cynthiaagata))
 
 To contribute to the Foodlytics app, please read and follow the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md). To run the app locally, follow the steps in the "Run the dashboard locally" section above.
 
