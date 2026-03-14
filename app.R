@@ -133,7 +133,8 @@ server <- function(input, output, session) {
       theme_minimal() +
       theme(legend.position = "top") +
       labs(x = "Restaurant Count",
-           y = "Cuisine/Type")
+           y = "Cuisine/Type",
+           fill = "")
     ggplotly(p)
   })
 }
