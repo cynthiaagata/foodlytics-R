@@ -39,11 +39,21 @@ ui <- page_fillable(
   title = "Foodlytics Dashboard",
   layout_sidebar(
     sidebar = sidebar(
+      tags$label("Price Range", style = "font-weight: bold;"),
+      div(
+        style = "height: 200px; overflow-y: auto;",
+        checkboxGroupInput(
+          inputId = "price",
+          label = "",
+          choices = price_range,
+          selected = price_range
+        )
+      ),
       tags$label("Cuisine / Restaurant Type", style = "font-weight: bold;"),
       div(
         style = "height: 200px; overflow-y: auto;",
         checkboxGroupInput(
-          inputId = "checkbox_group",
+          inputId = "res_type",
           label = "",
           choices = cuisines,
           selected = cuisines
@@ -65,6 +75,14 @@ ui <- page_fillable(
     ),
     layout_columns(
       card(
+        card_header("Number of Restaurant by Cuisine/Type "),
+        plotlyOutput("bar_plot"),
+        full_screen = TRUE
+      ),
+      fill = FALSE
+    ),
+    layout_columns(
+      card(
         card_header("Restaurants"),
         dataTableOutput("data"),
         full_screen = TRUE
@@ -80,8 +98,14 @@ server <- function(input, output, session) {
   filtered_data <- reactive({
     data %>%
       filter(
-        category_1 %in% input$checkbox_group
+        price_range %in% input$price,
+        category_1 %in% input$res_type
       )
+  })
+  
+  observeEvent(input$action_button, {
+    updateCheckboxGroupInput(session, "price", selected = price_range)
+    updateCheckboxGroupInput(session, "res_type", selected = cuisines)
   })
   
   output$total_res <- renderText({
@@ -100,31 +124,19 @@ server <- function(input, output, session) {
       select(-url, -distance, -...1)
   })
   
-  output$scatterplot <- renderPlotly({
-    plot_ly(
-      data = filtered_data(),
-      x = ~total_bill,
-      y = ~tip,
-      type = "scatter",
-      mode = "markers"
-    ) %>%
-      add_lines(
-        y = ~ fitted(loess(tip ~ total_bill, data = filtered_data())),
-        line = list(color = "red"),
-        name = "LOWESS"
-      )
-  })
-  
-  output$ridge <- renderPlotly({
-    df <- filtered_data() %>%
-      mutate(percent = tip / total_bill)
+  output$bar_plot <- renderPlotly({
+    df <- filtered_data() |> 
+      count(category_1) |> 
+      arrange(desc(n)) |> 
+      head(20)
+      
     
-    p <- ggplot(df, aes(x = percent, y = day, fill = day)) +
-      geom_density_ridges(bandwidth = 0.01) +
-      scale_fill_viridis_d() +
+    p <- ggplot(df, aes(x = n, y = reorder(category_1, n), fill = n)) +
+      geom_bar(stat = "identity") +
       theme_minimal() +
-      theme(legend.position = "top")
-    
+      theme(legend.position = "top") +
+      labs(x = "Restaurant Count",
+           y = "Cuisine/Type")
     ggplotly(p)
   })
 }
