@@ -59,11 +59,8 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement by contacting:
-- Valeria Siciliano: [GitHub](https://github.com/Valeria-mds)
-- Cynthia Limantono: [GitHub](https://github.com/cynthiaagata)
-- Rabin Duran: [GitHub](https://github.com/rabin0208)
-- Shanze Khemani: [GitHub](https://github.com/shanzekhem)
+reported to the community leaders responsible for enforcement by contacting: 
+Cynthia Limantono: [GitHub](https://github.com/cynthiaagata)
 
 All complaints will be reviewed and investigated promptly and fairly.
 
